@@ -1,0 +1,25 @@
+<html>
+    <h1>Video streaming with Go</h1>
+    <div>
+      <video id="video"></video>
+    </div>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<!-- Or if you want a more recent canary version -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@canary"></script> -->
+<script>
+  var video = document.getElementById('video');
+  if(Hls.isSupported()) {
+    var hls = new Hls();
+    hls.loadSource('http://localhost:8000/media/2/stream/');
+    hls.attachMedia(video);
+    hls.on(Hls.Events.MANIFEST_PARSED,function() {
+      video.play();
+  });
+ } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = 'http://localhost:8000/media/2/stream/';
+    video.addEventListener('loadedmetadata',function() {
+      video.play();
+    });
+  }
+</script>
