@@ -8,12 +8,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func enableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
-}
 
 func main() {
 	fmt.Println("Starting video server...")
@@ -21,11 +15,18 @@ func main() {
 	http.ListenAndServe(":8000", nil)
 }
 
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With")
+}
+
 func handlers() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/", indexPage).Methods("GET")
-	router.HandleFunc("/media/{mId:[0-9]+}/stream/", streamHandler).Methods("GET")
-	router.HandleFunc("/media/{mId:[0-9]+}/stream/{segName:index[0-9]+.ts}", streamHandler).Methods("GET")
+	// router.HandleFunc("/media/{mId:[0-9]+}/stream/", streamHandler).Methods("GET")
+	// router.HandleFunc("/media/{mId:[0-9]+}/stream/{segName:index[0-9]+.ts}", streamHandler).Methods("GET")
 	return router
 }
 
@@ -59,7 +60,6 @@ func getMediaBase(mId int) string {
 }
 
 func serveHlsM3u8(w http.ResponseWriter, r *http.Request, mediaBase, m3u8Name string) {
-	enableCors(&w)
 	mediaFile := fmt.Sprintf("%s/%s", mediaBase, m3u8Name)
 	fmt.Printf("media file: %s\n", mediaFile)
 	w.Header().Set("Content-Type", "application/x-mpegURL")
@@ -67,7 +67,6 @@ func serveHlsM3u8(w http.ResponseWriter, r *http.Request, mediaBase, m3u8Name st
 }
 
 func serveHlsTs(w http.ResponseWriter, r *http.Request, mediaBase, segName string) {
-	enableCors(&w)
 	mediaFile := fmt.Sprintf("%s/%s", mediaBase, segName)
 	http.ServeFile(w, r, mediaFile)
 	w.Header().Set("Content-Type", "video/MP2T")
