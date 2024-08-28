@@ -18,5 +18,5 @@ ffmpeg -i 5-video.mp4 -filter_complex "[0:v]setpts=0.6667*PTS[v];[0:a]atempo=1.5
 
 ## Convert video to hls format
 ```bash
-ffmpeg -i video5_1_5x.mp4 -profile:v baseline -level 3.0 -s 1920x1080 -start_number 0 -hls_time 10 -hls_list_size 0 -f hls 5index.m3u8
+ffmpeg -i filename.mp4 -codec: copy -start_number 0 -hls_time 10 -hls_list_size 0 -f hls filename.m3u8
 ```

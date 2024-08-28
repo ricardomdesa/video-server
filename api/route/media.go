@@ -2,43 +2,38 @@ package route
 
 import (
 	"fmt"
-	"net/http"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
 func MediaRouter(group *gin.RouterGroup) {
-	group.GET("/:id/stream", streamHandler)
-	group.GET("/:id/:segName", streamHandler)
+	group.GET("/:mod/:id/stream", streamHandler)
+	group.GET("/:mod/:id/:segName", streamHandler)
 }
 
 func streamHandler(c *gin.Context) {
 	ID := c.Param("id")
+	mod := c.Param("mod")
 	log.Infof("ID received %v", ID)
-	mId, err := strconv.Atoi(ID)
-	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error get ID": err.Error()})
-		return
-	}
+
 	segName := c.Param("segName")
 	fmt.Println(segName)
 	log.Infof("segName received %v", segName)
 
 	if segName == "" {
-		mediaBase := getMediaBase(mId)
+		mediaBase := getMediaBase(ID, mod)
 		m3u8Name := "index.m3u8"
 		serveHlsM3u8(c, mediaBase, m3u8Name)
 	} else {
-		mediaBase := getMediaBase(mId)
+		mediaBase := getMediaBase(ID, mod)
     serveHlsTs(c, mediaBase, segName)
 	}
 }
 
-func getMediaBase(mId int) string {
+func getMediaBase(mId string, mod string) string {
 	mediaRoot := "assets/media"
-	return fmt.Sprintf("%s/%d", mediaRoot, mId)
+	return fmt.Sprintf("%s/%s/%s", mediaRoot, mod, mId)
 }
 
 func serveHlsM3u8(c *gin.Context, mediaBase, m3u8Name string) {
