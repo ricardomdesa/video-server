@@ -32,7 +32,7 @@ func streamHandler(c *gin.Context) {
 		serveHlsM3u8(c, mediaBase, m3u8Name)
 	} else {
 		mediaBase := getMediaBase(mId)
-		serveHlsTs(c, mediaBase, "index0.ts")
+    serveHlsTs(c, mediaBase, segName)
 	}
 }
 
