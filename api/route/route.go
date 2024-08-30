@@ -6,9 +6,10 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/ricardomdesa/videostr/api/middleware"
+	"github.com/ricardomdesa/videostr/config"
 )
 
-func Setup(gin *gin.Engine) {
+func Setup(env *config.Env, gin *gin.Engine) {
 
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000", "https://localhost:8000"},
@@ -19,10 +20,11 @@ func Setup(gin *gin.Engine) {
 	gin.Use(corsMiddleware)
 
 	pb := gin.Group("/")
-	pb.Use(middleware.ValidateApiKey())
+	pb.Use(middleware.ValidateApiKey(env))
 	pb.GET("/", Ping)
 
 	media := gin.Group("/media")
+	media.Use(middleware.ValidateApiKey(env))
 	MediaRouter(media)
 	ClassesRouter(pb)
 
