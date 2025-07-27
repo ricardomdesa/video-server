@@ -7,10 +7,10 @@ services:
     image: app
     container_name: videostr
     environment:
-      - API_KEY=SeCrEt824
+      - API_KEY=${API_KEY}
       - PORT=:8080
     restart: unless-stopped
     ports:
-      - "8081:8080"
+      - "8080:8080"
     volumes:
       - ./assets:/app/assets
