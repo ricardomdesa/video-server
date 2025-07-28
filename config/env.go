@@ -1,26 +1,38 @@
 package config
 
 import (
-	"os"
+	"path/filepath"
+	"time"
+	"runtime"
 
 	"github.com/spf13/viper"
 )
 
 type Env struct {
-	ApiKey string
-	Port   string
+	ContextTimeout     time.Duration
+	ApiKey   string `mapstructure:"API_KEY"`
+	Port     string `mapstructure:"PORT"`
+	RedisURL string `mapstructure:"REDIS_URL"`
 }
 
 func NewEnv() *Env {
 	viper.SetDefault("API_KEY", "SeCrEt824")
-	viper.SetDefault("PORT", ":8080")
-	env := Env{}
+	viper.SetDefault("PORT", ":8084")
+	viper.SetDefault("CONTEXT_TIMEOUT", 30)
+	viper.SetDefault("REDIS_URL", "redis://localhost:6379/0?")
 
-	if env.ApiKey = os.Getenv("API_KEY"); env.ApiKey == "" {
-		env.ApiKey = viper.GetString("API_KEY")
+	_, file, _, ok := runtime.Caller(1)
+	if ok {
+		viper.SetConfigFile(filepath.Join(filepath.Dir(file), ".env"))
 	}
-	if env.Port = os.Getenv("PORT"); env.Port == "" {
-		env.Port = viper.GetString("PORT")
+	_ = viper.ReadInConfig() // Ignore error if config file not found
+	viper.AutomaticEnv()
+
+	var cfg Env
+	if err := viper.Unmarshal(&cfg); err != nil {
+		panic("Failed to unmarshal config: " + err.Error())
 	}
-	return &env
+	cfg.ContextTimeout = time.Duration(viper.GetInt64("CONTEXT_TIMEOUT") * int64(time.Second))
+
+	return &cfg
 }

@@ -5,11 +5,13 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/ricardomdesa/videostr/api/middleware"
+	"github.com/go-redis/redis/v8"
 	"github.com/ricardomdesa/videostr/config"
+	"github.com/ricardomdesa/videostr/internal/api/middleware"
+	"github.com/ricardomdesa/videostr/internal/api/repositories/persistence"
 )
 
-func Setup(env *config.Env, gin *gin.Engine) {
+func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine) {
 
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000"},
@@ -25,7 +27,10 @@ func Setup(env *config.Env, gin *gin.Engine) {
 
 	media := gin.Group("/media")
 	media.Use(middleware.ValidateApiKey(env))
-	MediaRouter(media)
+
+	redisRepo := persistence.NewRedisRepository(redis)
+
+	MediaRouter(media, redisRepo)
 	ClassesRouter(pb)
 
 }

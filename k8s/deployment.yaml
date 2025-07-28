@@ -15,14 +15,14 @@ spec:
     spec:
       containers:
       - name: go-api
-        image: vapi2
-        imagePullPolicy: IfNotPresent
+        image: go-api-minikube:v1
+        imagePullPolicy: Never
         env:
         - name: API_KEY
           valueFrom:
             secretKeyRef:
-              name: api-key
-              key: sapikey
+              name: go-api-secret
+              key: api_key
         ports:
         - containerPort: 8080
 

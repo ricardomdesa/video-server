@@ -1,0 +1,27 @@
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: redis-deployment
+      namespace: video-str
+    spec:
+      selector:
+        matchLabels:
+          app: redis
+      replicas: 1
+      template:
+        metadata:
+          labels:
+            app: redis
+        spec:
+          containers:
+            - name: redis
+              image: redis:latest # Or a specific version like redis:6.2.5-alpine
+              ports:
+                - containerPort: 6379
+              volumeMounts:
+                - name: redis-persistent-storage
+                  mountPath: /data # Default Redis data directory
+          volumes:
+            - name: redis-persistent-storage
+              persistentVolumeClaim:
+                claimName: redis-pvc
