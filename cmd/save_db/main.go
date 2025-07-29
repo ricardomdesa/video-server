@@ -2,38 +2,37 @@ package main
 
 import (
 	"context"
-	"path/filepath"
-
+	"fmt"
+	"github.com/go-redis/redis/v8"
 	"github.com/ricardomdesa/videostr/config"
-	"github.com/ricardomdesa/videostr/internal/api/repositories/persistence"
 	log "github.com/sirupsen/logrus"
+	"os"
+	"path/filepath"
 )
-func main() {
 
+func main() {
 	log.Info("Starting video saver...")
+	targetDir := "./assets/media/mod1/1-Introd"
+	modulos := []string{
+		"mod1:5-Motivações",
+		"mod1:2-Motivações",
+		"mod1:5-Motivações",
+	}
+
 	env := config.NewEnv()
-	
 	redisConn := config.NewRedis(env, 0)
 	defer redisConn.Close()
 
-	persistenceRepo := persistence.NewRedisRepository(redisConn)
-
-	data, _ := GetMediaData(context.Background(), persistenceRepo, "video:mod1:1-Instalação:index0.ts")
-	if data == nil {
-		log.Println("DAta here")
-		log.Println(data)
-		print(data)
-	}else{
-		log.Println("Data not found for key video:mod1:1-Instalação:index0.ts")
-	}
-	return
-
-	// saves the media byte data from /assets/media/mod1/1-Instalação/index0.ts to Redis
-	byte := []byte(filepath.Join("assets", "media", "mod1", "1-Instalação", "index0.ts"))
-	if err := persistenceRepo.SaveMediaData(context.Background(), "video:mod1:1-Instalação:index0.ts", byte); err != nil {
-		log.Fatalf("Failed to save media data: %v", err)
-	} else {
-		log.Info("Media data saved successfully")
+	//persistenceRepo := persistence.NewRedisRepository(redisConn)
+	//if err := persistenceRepo.SaveClassesJson(ctx, "./assets/media/mod.json"); err != nil {
+	//	log.Fatalf("Failed to save classes JSON: %v", err)
+	//	return
+	//}
+	for _, modulo := range modulos {
+		err := ListarArquivosEDefinirRedis(targetDir, modulo, redisConn)
+		if err != nil {
+			log.Fatalf("Ocorreu um erro: %v", err)
+		}
 	}
 	log.Info("Video saver finished successfully")
 	if err := redisConn.Close(); err != nil {
@@ -44,12 +43,40 @@ func main() {
 	log.Info("Exiting video saver")
 }
 
-func GetMediaData(ctx context.Context, redisRepo *persistence.RedisRepository, key string) ([]byte, error) {
-	data, err := redisRepo.GetMediaData(ctx, key)
+func ListarArquivosEDefinirRedis(dirPath string, modulo string, redisClient *redis.Client) error {
+	// Obter a lista de itens no diretório
+	entries, err := os.ReadDir(dirPath) // Use os.ReadDir para Go 1.16+
 	if err != nil {
-		log.Errorf("Failed to get media data for key %s: %v", key, err)
-		return nil, err
+		return fmt.Errorf("erro ao ler o diretório %s: %w", dirPath, err)
 	}
-	log.Infof("Successfully retrieved media data for key %s", key)
-	return data, nil
-}	
+
+	for _, entry := range entries {
+		// Ignorar subdiretórios, queremos apenas arquivos
+		if entry.IsDir() {
+			continue
+		}
+
+		filePath := filepath.Join(dirPath, entry.Name())
+
+		redisKey := fmt.Sprintf("%s:%s", modulo, entry.Name())
+		fmt.Println(redisKey)
+
+		// Ler o conteúdo do arquivo
+		fileContent, err := os.ReadFile(filePath) // Use os.ReadFile para Go 1.16+
+		if err != nil {
+			log.Printf("Erro ao ler o arquivo %s: %v", filePath, err)
+			continue // Continuar para o próximo arquivo mesmo se este falhar
+		}
+
+		// Salvar o conteúdo do arquivo (em bytes) no Redis
+		// Usamos context.Background() para um contexto simples. Em aplicações reais, use um contexto apropriado.
+		err = redisClient.Set(context.Background(), redisKey, fileContent, 0).Err()
+		if err != nil {
+			log.Printf("Erro ao salvar o arquivo %s no Redis com a chave %s: %v", filePath, redisKey, err)
+			continue // Continuar para o próximo arquivo
+		}
+
+		fmt.Printf("Arquivo '%s' salvo no Redis com a chave '%s'\n", entry.Name(), redisKey)
+	}
+	return nil
+}

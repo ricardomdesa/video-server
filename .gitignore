@@ -1,4 +1,8 @@
 assets
 main
 
-.env
+.env*
+
+assets/
+*.ts
+*.m3u8

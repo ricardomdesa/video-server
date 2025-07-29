@@ -11,7 +11,7 @@
   var video = document.getElementById('video');
   if(Hls.isSupported()) {
     var hls = new Hls();
-    hls.loadSource('http://localhost:8080/media/stream?id=51');
+    hls.loadSource('http://localhost:8084/media/stream?id=51');
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED,function() {
       video.play();

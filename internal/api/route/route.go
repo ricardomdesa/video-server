@@ -31,7 +31,7 @@ func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine) {
 	redisRepo := persistence.NewRedisRepository(redis)
 
 	MediaRouter(media, redisRepo)
-	ClassesRouter(pb)
+	ClassesRouter(pb, redisRepo)
 
 }
 
