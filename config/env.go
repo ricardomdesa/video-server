@@ -27,7 +27,7 @@ func NewEnv() *Env {
 	viper.SetDefault("AWS_ACCESS_KEY_ID", "your_access_key_id")
 	viper.SetDefault("AWS_SECRET_ACCESS_KEY", "your_secret_access_key")
 	viper.SetDefault("S3_ENDPOINT", "http://localhost:4566")
-	viper.SetDefault("S3_BUCKET", "bucket")
+	viper.SetDefault("S3_BUCKET", "invalid-bucket")
 
 	_, file, _, ok := runtime.Caller(1)
 	if ok {

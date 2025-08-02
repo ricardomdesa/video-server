@@ -6,3 +6,5 @@ main
 assets/
 *.ts
 *.m3u8
+
+.idea/
