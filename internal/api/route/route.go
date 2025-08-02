@@ -3,6 +3,7 @@ package route
 import (
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -11,7 +12,7 @@ import (
 	"github.com/ricardomdesa/videostr/internal/api/repositories/persistence"
 )
 
-func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine) {
+func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *session.Session) {
 
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000"},
@@ -29,8 +30,9 @@ func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine) {
 	media.Use(middleware.ValidateApiKey(env))
 
 	redisRepo := persistence.NewRedisRepository(redis)
+	s3Repo := persistence.NewS3Repository(awsSession, env.S3Bucket)
 
-	MediaRouter(media, redisRepo)
+	MediaRouter(media, s3Repo)
 	ClassesRouter(pb, redisRepo)
 
 }

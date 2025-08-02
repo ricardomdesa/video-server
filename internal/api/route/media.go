@@ -1,26 +1,28 @@
 package route
 
 import (
-	"github.com/gin-gonic/gin"
-	log "github.com/sirupsen/logrus"
 	"context"
+
+	"github.com/gin-gonic/gin"
+	"github.com/ricardomdesa/videostr/internal/api/repositories/persistence"
+	log "github.com/sirupsen/logrus"
 )
 
-type RedisRepository interface {
+type Repository interface {
 	SaveMediaData(ctx context.Context, key string, data interface{}) error
 	GetMediaData(ctx context.Context, key string) ([]byte, error)
 }
 
-func MediaRouter(group *gin.RouterGroup, redisRepo RedisRepository) {
+func MediaRouter(group *gin.RouterGroup, s3Repo *persistence.S3Repository) {
 	group.GET("/:mod/:id/stream", func(c *gin.Context) {
-		streamHandler(c, redisRepo)
+		streamHandler(c, s3Repo)
 	})
 	group.GET("/:mod/:id/:segName", func(c *gin.Context) {
-		streamHandler(c, redisRepo)
+		streamHandler(c, s3Repo)
 	})
 }
 
-func streamHandler(c *gin.Context, redisRepo RedisRepository) {
+func streamHandler(c *gin.Context, s3Repo *persistence.S3Repository) {
 	ID := c.Param("id")
 	mod := c.Param("mod")
 	log.Infof("ID received %v", ID)
@@ -29,7 +31,7 @@ func streamHandler(c *gin.Context, redisRepo RedisRepository) {
 	log.Infof("segName received %v", segName)
 
 	mediaKey := getMediaKey(ID, mod, segName)
-	mediaData, err := redisRepo.GetMediaData(c, mediaKey)
+	mediaData, err := s3Repo.GetMediaData(c, mediaKey)
 	if err != nil {
 		log.Errorf("Failed to fetch media data: %v", err)
 		c.JSON(500, gin.H{"error": "Failed to fetch media data"})

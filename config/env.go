@@ -13,6 +13,10 @@ type Env struct {
 	ApiKey   string `mapstructure:"API_KEY"`
 	Port     string `mapstructure:"PORT"`
 	RedisURL string `mapstructure:"REDIS_URL"`
+	AWSAccessKeyID	 string `mapstructure:"AWS_ACCESS_KEY_ID"`
+	AWSSecretAccessKey string `mapstructure:"AWS_SECRET_ACCESS_KEY"`
+	S3Endpoint string `mapstructure:"S3_ENDPOINT"`
+	S3Bucket string `mapstructure:"S3_BUCKET"`
 }
 
 func NewEnv() *Env {
@@ -20,6 +24,10 @@ func NewEnv() *Env {
 	viper.SetDefault("PORT", ":8084")
 	viper.SetDefault("CONTEXT_TIMEOUT", 30)
 	viper.SetDefault("REDIS_URL", "redis://localhost:6379/0?")
+	viper.SetDefault("AWS_ACCESS_KEY_ID", "your_access_key_id")
+	viper.SetDefault("AWS_SECRET_ACCESS_KEY", "your_secret_access_key")
+	viper.SetDefault("S3_ENDPOINT", "http://localhost:4566")
+	viper.SetDefault("S3_BUCKET", "bucket")
 
 	_, file, _, ok := runtime.Caller(1)
 	if ok {

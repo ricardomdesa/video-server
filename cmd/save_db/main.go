@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/ricardomdesa/videostr/config"
+	"github.com/ricardomdesa/videostr/internal/api/repositories/persistence"
 	log "github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
@@ -12,22 +13,20 @@ import (
 
 func main() {
 	log.Info("Starting video saver...")
-	targetDir := "./assets/media/mod1/1-Introd"
+	targetDir := "./assets/media/mod1/1-Introdução"
 	modulos := []string{
-		"mod1:5-Motivações",
-		"mod1:2-Motivações",
-		"mod1:5-Motivações",
+		"mod1:1-Introdução",
 	}
 
 	env := config.NewEnv()
 	redisConn := config.NewRedis(env, 0)
 	defer redisConn.Close()
 
-	//persistenceRepo := persistence.NewRedisRepository(redisConn)
-	//if err := persistenceRepo.SaveClassesJson(ctx, "./assets/media/mod.json"); err != nil {
-	//	log.Fatalf("Failed to save classes JSON: %v", err)
-	//	return
-	//}
+	persistenceRepo := persistence.NewRedisRepository(redisConn)
+	if err := persistenceRepo.SaveClassesJson(context.Background(), "./assets/media/mod.json"); err != nil {
+		log.Fatalf("Failed to save classes JSON: %v", err)
+		return
+	}
 	for _, modulo := range modulos {
 		err := ListarArquivosEDefinirRedis(targetDir, modulo, redisConn)
 		if err != nil {

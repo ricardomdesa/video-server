@@ -25,7 +25,28 @@ services:
       - "6379:6379"
     volumes:
       - redis-data:/data/redis
+
+  
+  cassandra:
+    image: cassandra:latest # Use the latest official Cassandra image
+    container_name: cassandra-db # Assign a name to the container
+    ports:
+      - "9042:9042" # Map host port 9042 to container port 9042 (Cassandra's native protocol port)
+    volumes:
+      - cassandra_data:/var/lib/cassandra # Persist Cassandra data in a named volume
+    environment:
+      # CASSANDRA_STARTUP_TIMEOUT is crucial to give Cassandra enough time to initialize.
+      # Without this, the Go application might try to connect before Cassandra is ready.
+      # Adjust this value based on your system's performance if you encounter connection issues.
+      - CASSANDRA_STARTUP_TIMEOUT=180 # seconds
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh --debug -e 'describe cluster' || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s # Give Cassandra some time to start before health checks begin
       
 volumes:
+  cassandra_data: # Define the named volume for Cassandra data persistence
   redis-data:
     external: true

@@ -17,7 +17,12 @@ func main() {
 	redisConn := config.NewRedis(env, 0)
 	defer redisConn.Close()
 
-	route.Setup(env, redisConn, r)
+	awsSession, err := config.NewAWSSession(env)
+	if err != nil {
+		log.Fatalf("Failed to create AWS session: %v", err)
+	}
+
+	route.Setup(env, redisConn, r, awsSession)
 	gin.SetMode(gin.DebugMode)
 	
 	if err := http.ListenAndServe(env.Port, r); err != nil {

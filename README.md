@@ -57,3 +57,21 @@ data:
 
 ```
 
+---
+
+# Localstack
+
+S3 Bucket is running in localstack
+
+~/projects/localstack
+
+```bash
+
+localstack start
+
+aws --endpoint-url=http://localhost:4566 s3 mb s3://videos-bucket-fullc --profile localstack;
+
+aws --endpoint-url=http://localhost:4566 s3 ls s3://videos-bucket-fullc --profile localstack;
+
+
+```
