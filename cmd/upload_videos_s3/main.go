@@ -21,10 +21,7 @@ func main() {
 	env := config.NewEnv()
 
 	log.Print("Starting video saver...")
-	targetDir := "./assets/videos"
-	// modulos := []string{
-	// 	"mod1:1-Introdução",
-	// }
+	targetDir := "../../assets/media/"
 
 	// Cria uma sessão com a configuração do endpoint e credenciais.
 	sess, err := session.NewSession(&aws.Config{
@@ -41,9 +38,26 @@ func main() {
 	}
 
 	fmt.Println("Bucket:", env.S3Bucket)
+	if env.S3Bucket == "invalid-bucket" {
+		fmt.Println("Bucket inválido, verifique a configuração do LocalStack.")
+		os.Exit(1)
+	}
 
-	downloadVideos(sess, env.S3Bucket, targetDir, "mod1:1-Introdução:index.m3u8")
+	// upload(sess, env.S3Bucket, targetDir, ModulosMap)
+	downloadVideos(sess, env.S3Bucket, targetDir, "mod18:1-Apresentando_caso.index.m3u8")
 
+}
+
+func upload(sess *session.Session, bucketName string, targetDir string, modulosMap map[string]string) {
+	// Cria um uploader S3.
+	uploader := s3manager.NewUploader(sess)
+	for nome, modulo := range modulosMap {
+		fmt.Printf("path do arquivo : %s e nome do arquivo : %s\n", filepath.Join(targetDir, modulo), nome)
+		err := ListarArquivos(filepath.Join(targetDir, modulo), bucketName, nome, uploader)
+		if err != nil {
+			log.Fatalf("Ocorreu um erro: %v", err)
+		}
+	}
 }
 
 func downloadVideos(sess *session.Session, bucket string, targetDir string, name string) {
@@ -65,25 +79,11 @@ func downloadVideos(sess *session.Session, bucket string, targetDir string, name
 
 	fmt.Printf("Vídeo baixado com sucesso: %s\n", targetDir)
 
-	// upload(sess, bucket, targetDir, []string{"mod1:1-Introdução:index.m3u8"})
 }
 
-
-func upload(sess *session.Session, bucketName string, targetDir string, modulos []string) {
-	// Cria um uploader S3.
-	uploader := s3manager.NewUploader(sess)
-	for _, modulo := range modulos {
-		err := ListarArquivosEDefinirRedis(targetDir, bucketName, modulo, uploader)
-		if err != nil {
-			log.Fatalf("Ocorreu um erro: %v", err)
-		}
-	}
-}
-
-
-func ListarArquivosEDefinirRedis(dirPath string, bucketName string,modulo string, uploader *s3manager.Uploader) error {
+func ListarArquivos(dirPath string, bucketName string, modulo string, uploader *s3manager.Uploader) error {
 	// Obter a lista de itens no diretório
-	entries, err := os.ReadDir(dirPath) // Use os.ReadDir para Go 1.16+
+	entries, err := os.ReadDir(dirPath)
 	if err != nil {
 		return fmt.Errorf("erro ao ler o diretório %s: %w", dirPath, err)
 	}
@@ -96,11 +96,21 @@ func ListarArquivosEDefinirRedis(dirPath string, bucketName string,modulo string
 
 		filePath := filepath.Join(dirPath, entry.Name())
 
-		redisKey := fmt.Sprintf("%s:%s", modulo, entry.Name())
-		fmt.Println(redisKey)
+		fileName := fmt.Sprintf("%s:%s", modulo, entry.Name())
+		fmt.Println(fileName)
+
+		// Verificar se o arquivo ja existe no S3
+		_, err = uploader.S3.HeadObject(&s3.HeadObjectInput{
+			Bucket: aws.String(bucketName),
+			Key:    aws.String(fileName),
+		})
+		if err == nil {
+			fmt.Printf("Arquivo '%s' já existe no S3, pulando upload.\n", fileName)
+			continue // Se o arquivo já existe, pular o upload
+		}
 
 		// Ler o conteúdo do arquivo
-		fileContent, err := os.ReadFile(filePath) // Use os.ReadFile para Go 1.16+
+		fileContent, err := os.ReadFile(filePath) 
 		if err != nil {
 			log.Printf("Erro ao ler o arquivo %s: %v", filePath, err)
 			continue // Continuar para o próximo arquivo mesmo se este falhar
@@ -108,11 +118,11 @@ func ListarArquivosEDefinirRedis(dirPath string, bucketName string,modulo string
 
 		uploader.Upload(&s3manager.UploadInput{
 			Bucket: aws.String(bucketName),
-			Key:    aws.String(redisKey),
+			Key:    aws.String(fileName),
 			Body:   bytes.NewReader(fileContent),
 		})
 
-		fmt.Printf("Arquivo '%s' salvo no S3 com a chave '%s'\n", entry.Name(), redisKey)
+		fmt.Printf("Arquivo '%s' salvo no S3 com a chave '%s'\n", entry.Name(), fileName)
 	}
 	return nil
 }
