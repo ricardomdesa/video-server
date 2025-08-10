@@ -14,7 +14,7 @@ type Repository interface {
 }
 
 func MediaRouter(group *gin.RouterGroup, s3Repo *persistence.S3Repository) {
-	group.GET("/:mod/:id/stream", func(c *gin.Context) {
+	group.GET("/:mod/:id/stream",func(c *gin.Context) {
 		streamHandler(c, s3Repo)
 	})
 	group.GET("/:mod/:id/:segName", func(c *gin.Context) {

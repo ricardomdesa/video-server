@@ -17,6 +17,7 @@ type Env struct {
 	AWSSecretAccessKey string `mapstructure:"AWS_SECRET_ACCESS_KEY"`
 	S3Endpoint string `mapstructure:"S3_ENDPOINT"`
 	S3Bucket string `mapstructure:"S3_BUCKET"`
+	SecretKey string `mapstructure:"SECRET_KEY"`
 }
 
 func NewEnv() *Env {
@@ -28,6 +29,7 @@ func NewEnv() *Env {
 	viper.SetDefault("AWS_SECRET_ACCESS_KEY", "your_secret_access_key")
 	viper.SetDefault("S3_ENDPOINT", "http://localhost:4566")
 	viper.SetDefault("S3_BUCKET", "videos-bucket-fullc")
+	viper.SetDefault("SECRET_KEY", "your_secret_key")
 
 	_, file, _, ok := runtime.Caller(1)
 	if ok {

@@ -1,6 +1,7 @@
 package route
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -14,6 +15,11 @@ import (
 
 func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *session.Session) {
 
+	// Baixa as chaves públicas do Keycloak na inicialização.
+	err := middleware.FetchPublicKeys()
+	if err != nil {
+		log.Fatalf("Falha ao buscar as chaves públicas do Keycloak: %v", err)
+	}
 	corsMiddleware := cors.New(cors.Config{
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
@@ -23,11 +29,11 @@ func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *se
 	gin.Use(corsMiddleware)
 
 	pb := gin.Group("/")
-	pb.Use(middleware.ValidateApiKey(env))
+	pb.Use(middleware.AuthMiddleware())
 	pb.GET("/ping", Ping)
 
 	media := gin.Group("/media")
-	media.Use(middleware.ValidateApiKey(env))
+	media.Use(middleware.AuthMiddleware())
 
 	redisRepo := persistence.NewRedisRepository(redis)
 	s3Repo := persistence.NewS3Repository(awsSession, env.S3Bucket)

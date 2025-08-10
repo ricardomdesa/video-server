@@ -6,6 +6,7 @@ require (
 	github.com/aws/aws-sdk-go v1.55.8
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
+	github.com/go-jose/go-jose/v3 v3.0.4
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/gorilla/mux v1.8.1
 	github.com/sirupsen/logrus v1.9.3
