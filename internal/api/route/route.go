@@ -21,7 +21,7 @@ func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *se
 		log.Fatalf("Falha ao buscar as chaves públicas do Keycloak: %v", err)
 	}
 	corsMiddleware := cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:9002"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders: []string{"*"},
 	})
@@ -29,8 +29,8 @@ func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *se
 	gin.Use(corsMiddleware)
 
 	pb := gin.Group("/")
-	pb.Use(middleware.AuthMiddleware())
 	pb.GET("/ping", Ping)
+	pb.Use(middleware.AuthMiddleware())
 
 	media := gin.Group("/media")
 	media.Use(middleware.AuthMiddleware())
