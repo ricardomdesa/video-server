@@ -3,9 +3,10 @@ package persistence
 import (
 	context "context"
 	"encoding/json"
+	"os"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/ricardomdesa/videostr/domain"
-	"os"
 )
 
 type RedisRepository struct {
@@ -28,12 +29,12 @@ func (r *RedisRepository) SaveMediaData(ctx context.Context, key string, data in
 
 }
 
-func (r *RedisRepository) SaveClassesJson(ctx context.Context, jsonPath string) error {
+func (r *RedisRepository) SaveJson(ctx context.Context, jsonPath, key string) error {
 	f, err := os.ReadFile(jsonPath)
 	if err != nil {
 		return err
 	}
-	err = r.redisClient.Set(ctx, "classes_json", f, 0).Err()
+	err = r.redisClient.Set(ctx, key, f, 0).Err()
 	if err != nil {
 		return err
 	}
@@ -58,4 +59,18 @@ func (r *RedisRepository) GetJsonConfig(ctx context.Context) (domain.Classes, er
 		return domain.Classes{}, err
 	}
 	return mod, nil
+}
+
+func (r *RedisRepository) GetCoursesData(ctx context.Context) (domain.Course, error) {
+	value, err := r.redisClient.Get(ctx, "courses_json").Result()
+	if err != nil {
+		return domain.Course{}, err
+	}
+	var course domain.Course
+
+	if err := json.Unmarshal([]byte(value), &course); err != nil {
+		return domain.Course{}, err
+	}
+
+	return course, nil
 }

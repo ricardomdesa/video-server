@@ -14,25 +14,25 @@ import (
 	"github.com/go-jose/go-jose/v3/jwt"
 )
 
-// JWTKeySet é a estrutura para armazenar o JWKS (JSON Web Key Set).
 type JWTKeySet struct {
 	Keys []jose.JSONWebKey `json:"keys"`
 }
 
-// Configurações do Keycloak.
-const (
-	// Altere para a URL do seu Keycloak e o nome do seu realm
-	keycloakURL = "https://keycloak-keycloak.5kfj6f.easypanel.host"
-	realm       = "videostr"
-)
-
-var (
+type AuthMidd struct {
+	Env *config.Env
 	keySet *JWTKeySet
-)
+}
+
+func NewAuthMidd(env *config.Env) *AuthMidd {
+	return &AuthMidd{
+		Env:   env,
+		keySet: &JWTKeySet{},
+	}
+}
 
 // FetchPublicKeys faz a requisição para o endpoint de chaves públicas do Keycloak.
-func FetchPublicKeys() error {
-	jwksURI := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/certs", keycloakURL, realm)
+func (am *AuthMidd) FetchPublicKeys() error {
+	jwksURI := fmt.Sprintf("%s/realms/%s/protocol/openid-connect/certs", am.Env.KeycloakURL, am.Env.KeycloakRealm)
 	resp, err := http.Get(jwksURI)
 	if err != nil {
 		return fmt.Errorf("falha na requisição para o JWKS URI: %w", err)
@@ -43,8 +43,8 @@ func FetchPublicKeys() error {
 		return fmt.Errorf("status de resposta inesperado do JWKS URI: %s", resp.Status)
 	}
 
-	keySet = &JWTKeySet{}
-	if err := json.NewDecoder(resp.Body).Decode(keySet); err != nil {
+	am.keySet = &JWTKeySet{}
+	if err := json.NewDecoder(resp.Body).Decode(am.keySet); err != nil {
 		return fmt.Errorf("falha ao decodificar a resposta JWKS: %w", err)
 	}
 
@@ -52,10 +52,10 @@ func FetchPublicKeys() error {
 	return nil
 }
 
-func ValidateApiKey(env *config.Env) gin.HandlerFunc {
+func (am *AuthMidd) ValidateApiKey() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		apiKey := ctx.Request.Header.Get("X-API-Key")
-		if apiKey != env.ApiKey {
+		if apiKey != am.Env.ApiKey {
 			ctx.AbortWithStatusJSON(401, gin.H{"error": "invalid API key"})
 			return
 		}
@@ -64,8 +64,8 @@ func ValidateApiKey(env *config.Env) gin.HandlerFunc {
 }
 
 // getJWKForKeyID busca a chave correta no JWKS usando o ID da chave do JWT.
-func GetJWKForKeyID(keyID string) (jose.JSONWebKey, error) {
-	for _, key := range keySet.Keys {
+func (am *AuthMidd) GetJWKForKeyID(keyID string) (jose.JSONWebKey, error) {
+	for _, key := range am.keySet.Keys {
 		if key.KeyID == keyID {
 			return key, nil
 		}
@@ -74,7 +74,7 @@ func GetJWKForKeyID(keyID string) (jose.JSONWebKey, error) {
 }
 
 // AuthMiddleware é o middleware que verifica o token JWT.
-func AuthMiddleware() gin.HandlerFunc {
+func (am *AuthMidd) AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -90,11 +90,6 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Token JWT inválido"})
 			return
 		}
-
-		// Extrai o valor do kid de forma segura
-		// --- NOVO CÓDIGO DE DEBUG ---
-		fmt.Printf("Cabeçalho do token recebido: %+v\n\n", parsedToken.Headers[0])
-		fmt.Printf("ExtraHeaders: %+v", parsedToken.Headers[0].ExtraHeaders)
 		// -
 		// --- CÓDIGO CORRIGIDO AQUI ---
 		// Extrai o 'kid' diretamente do campo KeyID do cabeçalho
@@ -107,7 +102,7 @@ func AuthMiddleware() gin.HandlerFunc {
 
 
 		// 2. Busca a chave pública correspondente ao ID.
-		jwk, err := GetJWKForKeyID(keyID)
+		jwk, err := am.GetJWKForKeyID(keyID)
 		if err != nil {
 			fmt.Printf("Erro: %v", err)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Chave de validação não encontrada"})
@@ -126,7 +121,7 @@ func AuthMiddleware() gin.HandlerFunc {
 		// Valida as claims do token (exp, iss, etc.).
 		now := time.Now()
 		err = claims.Validate(jwt.Expected{
-			Issuer: fmt.Sprintf("%s/realms/%s", keycloakURL, realm),
+			Issuer: fmt.Sprintf("%s/realms/%s", am.Env.KeycloakURL, am.Env.KeycloakRealm),
 			Time:   now,
 		})
 		if err != nil {

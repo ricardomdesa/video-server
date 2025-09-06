@@ -25,7 +25,7 @@ func main() {
 	route.Setup(env, redisConn, r, awsSession)
 	gin.SetMode(gin.DebugMode)
 	
-	if err := http.ListenAndServe(env.Port, r); err != nil {
+	if err := http.ListenAndServe("0.0.0.0"+env.Port, r); err != nil {
 		log.Fatal(err)
 	}
 }

@@ -16,12 +16,13 @@ import (
 func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *session.Session) {
 
 	// Baixa as chaves públicas do Keycloak na inicialização.
-	err := middleware.FetchPublicKeys()
+	authMidd := middleware.NewAuthMidd(env)
+	err := authMidd.FetchPublicKeys()
 	if err != nil {
 		log.Fatalf("Falha ao buscar as chaves públicas do Keycloak: %v", err)
 	}
 	corsMiddleware := cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000", "http://localhost:9002"},
+		AllowOrigins: []string{"http://localhost:3000", "http://localhost:9003"},
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders: []string{"*"},
 	})
@@ -30,10 +31,10 @@ func Setup(env *config.Env, redis *redis.Client, gin *gin.Engine, awsSession *se
 
 	pb := gin.Group("/")
 	pb.GET("/ping", Ping)
-	pb.Use(middleware.AuthMiddleware())
+	pb.Use(authMidd.AuthMiddleware())
 
 	media := gin.Group("/media")
-	media.Use(middleware.AuthMiddleware())
+	media.Use(authMidd.AuthMiddleware())
 
 	redisRepo := persistence.NewRedisRepository(redis)
 	s3Repo := persistence.NewS3Repository(awsSession, env.S3Bucket)

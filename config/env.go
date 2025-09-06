@@ -18,6 +18,8 @@ type Env struct {
 	S3Endpoint string `mapstructure:"S3_ENDPOINT"`
 	S3Bucket string `mapstructure:"S3_BUCKET"`
 	SecretKey string `mapstructure:"SECRET_KEY"`
+	KeycloakURL string `mapstructure:"KEYCLOAK_URL"`
+	KeycloakRealm string `mapstructure:"KEYCLOAK_REALM"`
 }
 
 func NewEnv() *Env {
@@ -30,6 +32,8 @@ func NewEnv() *Env {
 	viper.SetDefault("S3_ENDPOINT", "http://localhost:4566")
 	viper.SetDefault("S3_BUCKET", "videos-bucket-fullc")
 	viper.SetDefault("SECRET_KEY", "your_secret_key")
+	viper.SetDefault("KEYCLOAK_URL", "https://keycloak.example.com")
+	viper.SetDefault("KEYCLOAK_REALM", "videostr")
 
 	_, file, _, ok := runtime.Caller(1)
 	if ok {

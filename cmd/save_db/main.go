@@ -23,7 +23,7 @@ func main() {
 	defer redisConn.Close()
 
 	persistenceRepo := persistence.NewRedisRepository(redisConn)
-	if err := persistenceRepo.SaveClassesJson(context.Background(), "./assets/media/mod.json"); err != nil {
+	if err := persistenceRepo.SaveJson(context.Background(), "./assets/media/mod.json", "classes_json"); err != nil {
 		log.Fatalf("Failed to save classes JSON: %v", err)
 		return
 	}

@@ -11,7 +11,7 @@ func ClassesRouter(group *gin.RouterGroup, redisRepo *persistence.RedisRepositor
 	})
 }
 func handler(c *gin.Context, redisRepo *persistence.RedisRepository) {
-	json, err := redisRepo.GetJsonConfig(c)
+	json, err := redisRepo.GetCoursesData(c)
 	if err != nil {
 		c.JSON(500, gin.H{"error": "Failed to fetch classes data"})
 		return
