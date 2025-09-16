@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/ricardomdesa/videostr/config"
+	"github.com/ricardomdesa/videostr/domain/mapper"
 )
 
 
@@ -43,8 +44,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	// upload(sess, env.S3Bucket, targetDir, ModulosMap)
-	downloadVideos(sess, env.S3Bucket, targetDir, "mod18:1-Apresentando_caso.index.m3u8")
+	upload(sess, env.S3Bucket, targetDir, mapper.ModulosMap)
+	// downloadVideos(sess, env.S3Bucket, targetDir, "mod18:1-Apresentando_caso.index.m3u8")
 
 }
 

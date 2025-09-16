@@ -75,3 +75,25 @@ aws --endpoint-url=http://localhost:4566 s3 ls s3://videos-bucket-fullc --profil
 
 
 ```
+
+## Creating bucket and feeding
+
+Use the Makefile commands to create the bucket
+`make createbucket`
+
+Check if the bucket was created:
+`make lsbuckets`
+
+---
+
+### Feeding
+
+Run the upload_videos_s3 binary
+
+```bash
+cd cmd/upload_videos_s3
+go run main.go
+```
+
+
+

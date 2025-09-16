@@ -5,10 +5,10 @@ lsvideos:
 	@aws s3 ls s3://videos-bucket-fullc --recursive --summarize --human-readable --profile localstack
 
 createbucket:
-	@aws s3 mb s3://teste --profile localstack
+	@aws s3 mb s3://videos-bucket-fullc --profile localstack
 
 deletebucket:
-	@aws s3 rb s3://teste --force --profile localstack
+	@aws s3 rb s3://videos-bucket-fullc --force --profile localstack
 
 lsbucket:
 	@aws s3 ls --profile localstack
