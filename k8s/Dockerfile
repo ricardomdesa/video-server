@@ -3,11 +3,12 @@ FROM golang:1.22-alpine AS builder
 WORKDIR /app
 RUN go env -w GOCACHE=/go-cache
 RUN go env -w GOMODCACHE=/gomod-cache
-COPY ./go.* /app
-RUN --mount=type=cache,target=/gomod-cache \
-    go mod download && \
-    go mod verify
-COPY ./ /app
+COPY ../go.* /app
+
+RUN echo $(ls -la)
+#RUN --mount=type=cache,target=/gomod-cache \
+RUN    go mod download && go mod verify
+COPY ../ /app
 RUN --mount=type=cache,target=/gomod-cache \
     --mount=type=cache,target=/go-cache \
     GOOS=linux go build -o app cmd/api/main.go

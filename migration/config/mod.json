@@ -1,0 +1,411 @@
+{
+    "mod1": {
+        "name": "1-",
+        "folder": "mod1",
+        "videos": [
+            "1-Introdução",
+            "2-O_que_é_a_Linguagem_GO",
+            "3-Histórico",
+            "4-O_que_GO_NÃO_é",
+            "5-Motivações"
+        ]
+    },
+    "mod2": {
+        "name": "2",
+        "folder": "mod2",
+        "videos": [
+            "1-Instalação",
+            "2-Principais_pastas",
+            "3-Go_no_VSCode"
+        ]
+    },
+    "mod3": {
+        "name": "3",
+        "folder": "mod3",
+        "videos": [
+            "1-Entendendo_a_primeira_linha",
+            "2-Declaração_e_atribuição",
+            "3-Criação_de_tipos",
+            "4-Importando_fmt_e_tipagem",
+            "5-Percorrendo_Arrays",
+            "6-Slices",
+            "7-Maps",
+            "8-Funções",
+            "9-Funções_variádicas",
+            "10-Closures",
+            "11-Iniciando_com_Structs",
+            "12-Composição_de_Structs",
+            "13-Métodos_em_Structs",
+            "14-Interfaces",
+            "15-Ponteiros",
+            "16-Quando_usar_ponteiros",
+            "17-Ponteiros_e_Structs",
+            "18-Interfaces_vazias",
+            "19-Type_assertation",
+            "20-Generics",
+            "21-Pacotes_e_módulos_parte_1",
+            "22-Pacotes_e_módulos_parte_2",
+            "23-Pacotes_e_módulos_parte_3",
+            "24-Instalando_pacotes",
+            "25-For",
+            "26-Condicionais",
+            "27-Compilando_projeto"
+        ]
+    },
+    "mod4": {
+        "name": "4-Pacotes_importantes",
+        "folder": "mod4",
+        "videos": [
+            "1-Manipulação_de_arquivos",
+            "2-Realizando_chamada_HTTP",
+            "3-Defer",
+            "4-Trabalhando_com_json",
+            "5-Busca_CEP",
+            "6-Iniciando_com_HTTP",
+            "7-Manipulando_Headers",
+            "8-Criando_função_para_BuscaCEP",
+            "9-Finalizando_resposta_para_o_servidor_HTTP",
+            "10-ServeMux",
+            "11-FileServer",
+            "12-Iniciando_com_templates",
+            "13-Template",
+            "14-Templates_com_arquivo_externo",
+            "15-Templates_com_webserver",
+            "16-Compondo_templates",
+            "17-Mapeando_funções_nos_templates",
+            "18-HttpClient_com_Timeout",
+            "19-Trabalhando_com_Post",
+            "20-Customizando_Request",
+            "21-Trabalhando_com_HTTP_usando_Contextos"
+        ]
+    },
+    "mod5": {
+        "name": "5-Context",
+        "folder": "mod5",
+        "videos": [
+            "1-Introdução_aos_contexto",
+            "2-Entendendo_conceitos_básicos",
+            "3-Context_utilizando_server_HTTP",
+            "4-Context_no_lado_do_Client",
+            "5-Context_WithValue"
+        ]
+    },
+    "mod6": {
+        "name": "6-Banco_de_dados",
+        "folder": "mod6",
+        "videos": [
+            "1-Introdução_a_banco_de_dados",
+            "2-Preparando_base_de_código",
+            "3-Inserindo_dados_no_banco",
+            "4-Alterando_dados_no_banco",
+            "5-Trabalhando_com_QueryRow",
+            "6-Selecionando_múltiplos_registros",
+            "7-Removendo_registro",
+            "8-Iniciando_com_GORM",
+            "9-Configurando_e_criando_operações",
+            "10-Realizando_primeiras_consultas",
+            "11-Realizando_consultas_com_where",
+            "12-Alterando_e_removendo_registros",
+            "13-Trabalhando_com_Soft_delete",
+            "14-Belongs_to",
+            "15-Has_One",
+            "16-Has_many",
+            "17-Pegadinha_no_has_many",
+            "18-Many_to_Many",
+            "19-Lock_otimista_vs_Pessimista"
+        ]
+    },
+    "mod7": {
+        "name": "7-Packaging",
+        "folder": "mod7",
+        "videos": [
+            "1-Introduzindo_go_mod",
+            "2-Acessando_pacotes_criados",
+            "3-Exportação_de_objetos",
+            "4-Entendendo_go_mod",
+            "5-Trabalhando_com_go_mod_replace",
+            "6-Usando_workspaces"
+        ]
+    },
+    "mod8": {
+        "name": "8-Testing",
+        "folder": "mod8",
+        "videos": [
+            "1-Iniciando_com_testes_automatizados",
+            "2-Testando_em_batch",
+            "3-Verificando_cobertura_de_código",
+            "4-Trabalhando_com_benchmarking",
+            "5-Fuzzing",
+            "6-Iniciando_com_Testify",
+            "7-Trabalhando_com_Mocks"
+        ]
+    },
+    "mod9": {
+        "name": "9-APIs",
+        "folder": "mod9",
+        "videos": [
+            "1-Falando_sobre_APIs",
+            "2-Estruturando_diretórios",
+            "3-Criando_arquivo_de_configuração",
+            "4-Finalizando_configuração",
+            "5-Outras_possibilidades_de_configuração",
+            "6-Criando_entidade_User",
+            "7-Testando_User",
+            "8-Criando_entidade_Product",
+            "9-Testando_Product",
+            "10-Criando_UserDB",
+            "11-Testando_criação_do_usuário",
+            "12-Finalizando_teste_de_UserDB",
+            "13-Criando_principais_métodos_de_ProductDB",
+            "14-Criando_FindAll_com_paginação",
+            "15-Testando_ProductDB",
+            "16-Finalizando_testes_de_ProductDB",
+            "17-Criando_handler_para_criar_produto",
+            "18-Testando_endpoint_de_criação_de_Product",
+            "19-Ajustando_package_para_os_handlers",
+            "20-Web_frameoworks_vs_Frameworks",
+            "21-Roteadores",
+            "22-Buscando_e_alterando_products",
+            "23-Listando_e_removendo_Products",
+            "24-Criando_user",
+            "25-Falando_sobre_JW",
+            "26-Gerando_token_JWT",
+            "27-Protegendo_products",
+            "28-Criando_e_trabalhando_com_middlewares",
+            "29-Iniciando_com_documentação_da_API",
+            "30-Gerando_primeira_documentação",
+            "31-Acessando_swagger_pela_primeira_vez",
+            "32-Documentando_criação_do_User",
+            "33-Trabalhando_na_geração_do_access_token",
+            "34-Criando_e_listando_products",
+            "35-Finalizando_docs"
+        ]
+    },
+    "mod10": {
+        "name": "10-Multithreading",
+        "folder": "mod10",
+        "videos": [
+            "1-Iniciando_com_Processos",
+            "2-Introdução_a_concorrência_e_Mutex",
+            "3-Concorrência_vs_Paralelismo_vs_Go",
+            "4-Multithreading",
+            "5-Scheduler",
+            "6-Go_e_suas_green_threads",
+            "7-Iniciando_com_Go_Routines",
+            "8-Trabalhando_com_Wait_Groups",
+            "9-Problema_simples_de_concorrência",
+            "10-Entendendo_Mutex_e_Operações_Atômicas",
+            "11-Iniciando_com_Channel",
+            "12-Forever",
+            "13-Iterando_com_range",
+            "14-Range_With_WaitGroup",
+            "15-Channel_Directions",
+            "16-Criando_um_Load_Balancer",
+            "17-Trabalhando_com_Select",
+            "18-Canais_com_Buffer"
+        ]
+    },
+    "mod11": {
+        "name": "11-Manipulando_eventos",
+        "folder": "mod11",
+        "videos": [
+            "1-Introdução_a_eventos",
+            "2-Elementos_táticos_de_um_contexto_de_eventos",
+            "3-Criando_Interfaces_da_solução",
+            "4-Registrando_eventos",
+            "5-Criando_suite_de_testes",
+            "6-Testando_Register",
+            "7-Testando_Registro_de_Handlers_Repetidos",
+            "8-Implementando_e_testando_método_Clear",
+            "9-Implementando_e_testando_método_Has",
+            "10-Implementando_método_Dispatch",
+            "11-Revisitando_slices",
+            "12-Removendo_handlers",
+            "13-Adicionando_go_routine_no_event_dispatcher",
+            "14-Utilizando_go_routines_no_Dispatcher",
+            "15-Instalando_RabbitMQ",
+            "16-Entendendo_o_RabbitMQ",
+            "17-Consumindo_mensagens_do_RabbitMQ",
+            "18-Criando_consumidor_na_pratica",
+            "19-Produzindo_e_consumindo_mensagens"
+        ]
+    },
+    "mod12": {
+        "name": "12-Modulos_privados",
+        "folder": "mod12",
+        "videos": [
+            "1-Introdução",
+            "2-Criando_repositório_privado",
+            "3-Configurando_GOPRIVATE",
+            "4-Autenticando_no_Bitbucket",
+            "5-Go_Proxy_vs_Vendor"
+        ]
+    },
+    "mod13": {
+        "name": "13-GraphQL",
+        "folder": "mod13",
+        "videos": [
+            "1-Introdução_ao_GraphQL",
+            "2-Gerando_esqueleto_do_servidor_GraphQL",
+            "3-Criando_Schema_GraphQL",
+            "4-Gerando_esqueleto_de_nossa_aplicação",
+            "5-Criando_resolver_para_Category",
+            "6-Persistindo_Category_via_Playground",
+            "7-Fazendo_queries_de_Category",
+            "8-Implementando_CourseDB",
+            "9-Criando_resolver_de_CreateCourse",
+            "10-Implementando_QueryCourses",
+            "11-Dados_encadeados",
+            "12-Finalizando_encadeamento_de_categorias"
+        ]
+    },
+    "mod14": {
+        "name": "14-gRPC",
+        "folder": "mod14",
+        "videos": [
+            "1-Iniciando_com_gRPC",
+            "2-Conceitos_iniciais",
+            "3-gRPC_HTTP2_e_Protocol_Buffers",
+            "4-Formatos_de_comunicação",
+            "5-REST_vs_gRPC",
+            "6-gRPC_vs_Protocol_Buffers",
+            "7-Instalando_compilador_e_plugins",
+            "8-Fazendo_setup_do_projeto",
+            "9-Criando_nosso_protofile",
+            "10-Fazendo_geração_de_código_com_protoc",
+            "11-Implementando_CreateCategory",
+            "12-Criando_servidor_gRPC",
+            "13-Interagindo_com_evans",
+            "14-Criando_categoryList_no_protofile",
+            "15-Listando_categories",
+            "16-Buscando_uma_categoria",
+            "17-Trabalhando_com_stream",
+            "18-Trabalhando_com_streams_bidirecionais"
+        ]
+    },
+    "mod15": {
+        "name": "15-Upload_S3",
+        "folder": "mod15",
+        "videos": [
+            "1-Entendendo_o_problema_referente_a_upload",
+            "10-Fazendo_retentativas_de_erro",
+            "2-Gerando_arquivos_exemplo",
+            "3-Configurando_AWS_session",
+            "4-Desenvolvendo_função_de_upload",
+            "5-Finalizando_primeira_implementação",
+            "6-Criando_credenciais_na_AWS",
+            "7-Fazendo_upload_de_forma_serial",
+            "8-Realizando_uploads_usando_go_routines",
+            "9-Limitando_quantidade_máxima_de_upload"
+        ]
+    },
+    "mod16": {
+        "name": "16-Cobra_CLI",
+        "folder": "mod16",
+        "videos": [
+            "1-Introdução_sobre_CLI",
+            "2-Setup_básico_da_aplicação",
+            "3-Inicializando_projeto_cobra",
+            "4-Criando_nossos_primeiros_comandos",
+            "5-Comandos_encadeados",
+            "6-Flags_locais_vs_globais",
+            "7-Manipulando_flags",
+            "8-Flags_mudando_valor_por_referência",
+            "9-Entendendo_hooks",
+            "10-Trabalhando_com_banco_de_dados",
+            "11-Inversão_de_controle_ao_executar_comandos"
+        ]
+    },
+    "mod17": {
+        "name": "17-SQLC",
+        "folder": "mod17",
+        "videos": [
+            "1-Mais_sobre_banco_de_dados",
+            "2-Trabalhando_com_migrations",
+            "3-Falando_sobre_SQLX",
+            "4-Iniciando_com_SQLC",
+            "5-Criando_CRUD",
+            "6-Finalizando_CRUD",
+            "7-Iniciando_com_transações",
+            "8-Implementando_método_para_transação",
+            "9-Vendo_a_transação_funcionar",
+            "10-Ajustando_tipo_de_campo",
+            "11-Exibindo_dados_com_Join"
+        ]
+    },
+    "mod18": {
+        "name": "18-UOW",
+        "folder": "mod18",
+        "videos": [
+            "1-Apresentando_caso",
+            "2-Entendendo_inconsistência",
+            "3-Entendendo_Unit_of_Work",
+            "4-Criando_interface_do_UOW",
+            "5-Registrando_repositórios",
+            "6-Implementando_principais_métodos",
+            "7-Implementando_GetRepository",
+            "8-Criando_novo_caso_de_uso",
+            "9-Testando_implementação_com_uow"
+        ]
+    },
+    "mod19": {
+        "name": "19-DI",
+        "folder": "mod19",
+        "videos": [
+            "1-Introdução_sobre_DI",
+            "2-Criando_situação_problema",
+            "3-Exibindo_árvore_de_dependencias",
+            "4-Bibliotecas_de_DI",
+            "5-Wire_na_prática",
+            "6-Trabalhando_com_sets_e_Interfaces",
+            "7-Sem_pontas_soltas"
+        ]
+    },
+    "mod20": {
+        "name": "20-Clean_Architecture",
+        "folder": "mod20",
+        "videos": [
+            "1-Introdução",
+            "2-Origem_da_Clean_Architecture",
+            "3-Pontos_importantes_sobre_arquitetura",
+            "4-Keep_options_open",
+            "5-Use_Cases",
+            "6-O_fluxo_dos_Use_Cases",
+            "7-Limites_arquiteturais",
+            "8-Input_vs_Output",
+            "9-Entendendo_DTOs",
+            "10-Presenters",
+            "11-Entities_vs_DDD",
+            "12-Nosso_objetivo",
+            "13-Entity_e_UseCase",
+            "14-Repositorios_e_EventHandler",
+            "15-Webserver",
+            "16-gRPC",
+            "17-GraphQL",
+            "18-Configuração_com_Viper",
+            "19-RabbitMQ_e_Google_Wire",
+            "20-Executando_servidores",
+            "21-Tudo_funcionando",
+            "22-Sobre_o_desafio"
+        ]
+    },
+    "mod21": {
+        "name": "21-Deploy_com_Docker_e_Kubernetes",
+        "folder": "mod21",
+        "videos": [
+            "1-O_que_faremos",
+            "2-Criando_projeto_exemplo",
+            "3-Criando_Dockerfile",
+            "4-Go_com_Docker_em_modo_dev",
+            "5-Entendendo_processo_de_build",
+            "6-Otimizando_geração_do_executável",
+            "7-Gerando_imagem_otimizada",
+            "8-C_GO_e_seus_impactos",
+            "9-Criando_cluster_kubernetes_com_Kind",
+            "10-Criando_primeiro_deployment",
+            "11-Criando_service_no_kubernetes",
+            "12-Probes",
+            "13-Palavras_finais"
+        ]
+    }
+}
